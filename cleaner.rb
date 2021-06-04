@@ -73,10 +73,20 @@ class Cleaner
       puts "Limiting deletion from #{delete_match_count} to #{@zarr_api.config.delete_limit}."
     end
 
-    queue_items_to_delete[0...@zarr_api.config.delete_limit].each { |z| @zarr_api.delete_queue_item(z['id']) }
+    smart_delete(queue_items_to_delete)
   end
 
   private
+
+  def smart_delete(queue_items_to_delete)
+    ids_to_delete = queue_items_to_delete[0...@zarr_api.config.delete_limit].map { |z| z['id'] }
+
+    if defined?(@zarr_api.delete_multiple_queue_items)
+      @zarr_api.delete_multiple_queue_items(ids_to_delete)
+    else
+      ids_to_delete.each { |i| @zarr_api.delete_queue_item(i) }
+    end
+  end
 
   def print_match_warning(delete_match_count, qb_status_boxes)
     filtered_commands = @zarr_api.commands.filter do |c|
