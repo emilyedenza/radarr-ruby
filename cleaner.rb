@@ -40,7 +40,7 @@ module RadarrRuby
       # end
 
       # free_space_threshold_bytes = free_threshold_mib * 1024 ** 2
-      @api.fetch_queue
+      @api.queue
     end
   end
 end

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'faraday'
 require 'faraday_middleware'
 
@@ -19,13 +20,15 @@ class ZarrApi
     @conn.delete("queue/#{item_id}", { should_blacklist: should_blacklist })
   end
 
-  def fetch_queue
+  def queue
     @conn.get('queue').body
   end
 
-  def get_free_disk_space; end
+  def free_disk_space
+    @conn.get('diskspace').body
+  end
 
-  def get_commands; end
+  def commands; end
 
   def restart; end
 end
