@@ -2,6 +2,7 @@
 #
 require 'set'
 require_relative 'api/zarr_api'
+require_relative 'api/qbittorrent_api'
 
 module RadarrRuby
   ##
@@ -13,18 +14,19 @@ module RadarrRuby
 
     ##
     # Generates a cleaner instance for Radarr.
-    def self.radarr(radarr_config)
-      Cleaner.new(ZarrApi.new(radarr_config))
+    def self.radarr(radarr_config, qbittorrent_config)
+      Cleaner.new(ZarrApi.new(radarr_config), QbittorrentApi.new(qbittorrent_config))
     end
 
     ##
     # Generates a cleaner instance for Sonarr.
-    def self.sonarr(sonarr_config)
-      Cleaner.new(ZarrApi.new(sonarr_config))
+    def self.sonarr(sonarr_config, qbittorrent_config)
+      Cleaner.new(ZarrApi.new(sonarr_config), QbittorrentApi.new(qbittorrent_config))
     end
 
-    def initialize(zarr_api)
+    def initialize(zarr_api, qbittorrent_api)
       @zarr_api = zarr_api
+      @qbittorrent_api = qbittorrent_api
     end
 
     ##
@@ -41,6 +43,14 @@ module RadarrRuby
       # end
 
       # free_space_threshold_bytes = free_threshold_mib * 1024 ** 2
+
+      torrents_timer_start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+      torrents = @qbittorrent_api.torrents({ filter: 'active' })
+      torrents += @qbittorrent_api.torrents({ filter: 'stalled' })
+      torrents_timer_end = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+      torrents_duration = (torrents_timer_end - torrents_timer_start).round(2)
+      puts "Fetched #{torrents.length} in #{torrents_duration} sec."
+
       zarr_queue = @zarr_api.queue
       puts "Fetched #{zarr_queue.length} queue items."
     end

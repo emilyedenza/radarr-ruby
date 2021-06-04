@@ -10,5 +10,9 @@ module RadarrRuby
       @username = config_hash['username']
       @password = config_hash['password']
     end
+
+    def inspect
+      "Host:\t\t\t\t\t\t#{host}"
+    end
   end
 end

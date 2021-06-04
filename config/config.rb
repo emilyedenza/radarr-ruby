@@ -18,7 +18,7 @@ module RadarrRuby
     end
 
     def self.qbittorrent
-      QbittorrentConfig.new(config_hash['qb'])
+      QbittorrentConfig.new(config_hash['qbittorrent'])
     end
 
     def self.config_hash(config_path = 'config.yml')
