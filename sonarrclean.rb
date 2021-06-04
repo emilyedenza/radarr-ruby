@@ -28,5 +28,6 @@ cleaner = RadarrRuby::Cleaner.sonarr(sonarr_config)
 
 loop do
   cleaner.clean
-  sleep(5)
+  puts "Sleeping for #{sonarr_config.sleep_sec} seconds."
+  sleep(sonarr_config.sleep_sec)
 end
