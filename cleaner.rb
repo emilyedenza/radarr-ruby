@@ -12,21 +12,10 @@ module RadarrRuby
                 :speed_threshold_kibs, :category, :disk_path, :free_threshold_mib, :zarr_api, :clean_analyser,
                 :redis_stuck_label
 
-    ##
-    # Generates a cleaner instance for Radarr.
-    def self.radarr(radarr_config, qbittorrent_config)
-      Cleaner.new(ZarrApi.new(radarr_config), QbittorrentApi.new(qbittorrent_config))
-    end
-
-    ##
-    # Generates a cleaner instance for Sonarr.
-    def self.sonarr(sonarr_config, qbittorrent_config)
-      Cleaner.new(ZarrApi.new(sonarr_config), QbittorrentApi.new(qbittorrent_config))
-    end
-
-    def initialize(zarr_api, qbittorrent_api)
-      @zarr_api = zarr_api
-      @qbittorrent_api = qbittorrent_api
+    def initialize(zarr_config, qbittorrent_config)
+      @zarr_api = ZarrApi.new(zarr_config)
+      @zarr_config = zarr_config
+      @qbittorrent_api = QbittorrentApi.new(qbittorrent_config)
     end
 
     ##
@@ -36,13 +25,14 @@ module RadarrRuby
       hashes_to_delete = Set.new
       titles_to_delete = []
 
-      # begin
-      # free_space = zarr_api.get_free_disk_space
-      # rescue read timeout
-      # rescue status error
-      # end
+      free_disk_space_item = @zarr_api.free_disk_space.find { |d| d['path'] == @zarr_config.disk_path }
 
-      # free_space_threshold_bytes = free_threshold_mib * 1024 ** 2
+      free_bytes = free_disk_space_item['freeSpace']
+      free_bytes_threshold = @zarr_config.free_threshold_mib * 1024**2
+      if free_bytes < free_bytes_threshold
+        puts "#{free_bytes} bytes < minimum (#{free_bytes_threshold}). Skipping run."
+        return
+      end
 
       torrents_timer_start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
       torrents = @qbittorrent_api.torrents({ filter: 'active' })

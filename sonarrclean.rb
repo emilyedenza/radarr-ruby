@@ -25,7 +25,7 @@ puts qbittorrent_config.inspect
 puts divider
 puts
 
-cleaner = RadarrRuby::Cleaner.sonarr(sonarr_config, qbittorrent_config)
+cleaner = RadarrRuby::Cleaner.new(sonarr_config, qbittorrent_config)
 
 loop do
   cleaner.clean
