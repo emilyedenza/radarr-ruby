@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-#
 
+require 'active_support/inflector'
 require_relative 'api/zarr_api'
 require_relative 'api/qbittorrent_api'
 require_relative 'analyser/clean_analyser'
@@ -41,7 +41,7 @@ module RadarrRuby
       torrents += @qbittorrent_api.torrents({ filter: 'stalled', category: @zarr_config.category })
       torrents_timer_end = Process.clock_gettime(Process::CLOCK_MONOTONIC)
       torrents_duration = (torrents_timer_end - torrents_timer_start).round(2)
-      puts "Fetched #{torrents.length} torrents in #{torrents_duration} sec."
+      puts "Fetched #{torrents.length} #{'torrent'.pluralize(torrents.length)} in #{torrents_duration} sec."
       puts
 
       torrents.each do |t|
@@ -71,16 +71,23 @@ module RadarrRuby
       zarr_queue = @zarr_api.queue
       zarr_timer_end = Process.clock_gettime(Process::CLOCK_MONOTONIC)
       zarr_timer_duration = (zarr_timer_end - zarr_timer_start).round(2)
-      puts "Fetched #{zarr_queue.length} queue items in #{zarr_timer_duration} sec."
+      puts "Fetched #{zarr_queue.length} queue #{'item'.pluralize(zarr_queue.length)} in #{zarr_timer_duration} sec."
+
+      zarr_no_download_items = zarr_queue.find_all { |z| !z['downloadId'] }
+      if zarr_no_download_items.any?
+        puts "WARNING: Found #{zarr_no_download_items.length} #{'item'.pluralize(zarr_no_download_items.length)} without download IDs:
+#{zarr_no_download_items.map { |z| "  > #{z['title']}" }.join('n')}"
+        puts
+      end
 
       queue_items_to_delete = zarr_queue.find_all do |z|
         qbittorrent_status_boxes[:delete].any? do |q|
-          q['hash'] == z['downloadId'].downcase
+          z['downloadId'] && q['hash'] == z['downloadId'].downcase
         end
       end
 
       delete_match_count = queue_items_to_delete.length
-      puts "#{delete_match_count} matched queue items to delete."
+      puts "#{delete_match_count} matched queue #{'item'.pluralize(delete_match_count)} to delete."
 
       if delete_match_count < qbittorrent_status_boxes[:delete].length
         all_commands = zarr_api.commands
@@ -88,7 +95,8 @@ module RadarrRuby
           @zarr_config.commands.include?(c['name']) && c['status'] == 'started'
         end
         puts "Only matched #{delete_match_count}/#{qbittorrent_status_boxes[:delete].length}."
-        puts "#{filtered_commands.length} commands running (#{filtered_commands.map { |c| c['name'] }.uniq.join(', ')})."
+        print "#{filtered_commands.length} #{'command'.pluralize(filtered_commands.length)} running "
+        puts "(#{filtered_commands.map { |c| c['name'] }.uniq.join(', ')})."
       end
 
       if delete_match_count > @zarr_config.delete_limit

@@ -8,3 +8,5 @@ gem 'redis', '~> 4.2'
 
 gem "faraday", "~> 1.4"
 gem "faraday_middleware", "~> 1.0"
+
+gem "activesupport", "~> 6.1"
