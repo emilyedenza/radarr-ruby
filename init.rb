@@ -5,6 +5,8 @@ require 'optionparser'
 require_relative 'generic_cleaner'
 require_relative 'config/config'
 
+$stdout.sync = true
+
 options = {}
 OptionParser.new do |opts|
   opts.banner = 'Usage: init.rb [options]'
