@@ -23,24 +23,26 @@ module RadarrRuby
       Cleaner.new(ZarrApi.new(sonarr_config))
     end
 
-    def initialize(api)
-      @api = api
+    def initialize(zarr_api)
+      @zarr_api = zarr_api
     end
 
     ##
     # Cleans up stalled or slow downloads from the relevant client.
+    # Prints log output to console as it processes.
     def clean
       hashes_to_delete = Set.new
       titles_to_delete = []
 
       # begin
-        # free_space = zarr_api.get_free_disk_space
-        # rescue read timeout
-        # rescue status error
+      # free_space = zarr_api.get_free_disk_space
+      # rescue read timeout
+      # rescue status error
       # end
 
       # free_space_threshold_bytes = free_threshold_mib * 1024 ** 2
-      @api.queue
+      zarr_queue = @zarr_api.queue
+      puts "Fetched #{zarr_queue.length} queue items."
     end
   end
 end

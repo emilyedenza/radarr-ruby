@@ -27,6 +27,6 @@ puts
 cleaner = RadarrRuby::Cleaner.sonarr(sonarr_config)
 
 loop do
-  puts cleaner.clean
+  cleaner.clean
   sleep(5)
 end
