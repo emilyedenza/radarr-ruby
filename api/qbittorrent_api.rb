@@ -1,0 +1,3 @@
+class QbittorrentApi
+
+end
