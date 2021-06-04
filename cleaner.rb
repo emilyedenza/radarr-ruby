@@ -30,7 +30,7 @@ module RadarrRuby
 
       free_disk_space_item = @zarr_api.free_disk_space.find { |d| d['path'] == @zarr_config.disk_path }
       free_bytes = free_disk_space_item['freeSpace']
-      free_bytes_threshold = @zarr_config.free_threshold_mib * 1024**2
+      free_bytes_threshold = @zarr_config.free_threshold_mib * 1024 ** 2
       if free_bytes < free_bytes_threshold
         puts "#{free_bytes} bytes < minimum (#{free_bytes_threshold}). Skipping run."
         return
@@ -78,10 +78,21 @@ module RadarrRuby
           q['hash'] == z['downloadId'].downcase
         end
       end
-      puts "#{queue_items_to_delete.length} matched queue items to delete."
 
-      if queue_items_to_delete.length > @zarr_config.delete_limit
-        puts "Limiting deletion from #{queue_items_to_delete.length} to #{@zarr_config.delete_limit}."
+      delete_match_count = queue_items_to_delete.length
+      puts "#{delete_match_count} matched queue items to delete."
+
+      if delete_match_count < qbittorrent_status_boxes[:delete].length
+        all_commands = zarr_api.commands
+        filtered_commands = all_commands.filter do |c|
+          @zarr_config.commands.include?(c['name']) && c['status'] == 'started'
+        end
+        puts "Only matched #{delete_match_count}/#{qbittorrent_status_boxes[:delete].length}."
+        puts "#{filtered_commands.length} commands running (#{filtered_commands.map { |c| c['name'] }.uniq.join(', ')})."
+      end
+
+      if delete_match_count > @zarr_config.delete_limit
+        puts "Limiting deletion from #{delete_match_count} to #{@zarr_config.delete_limit}."
       end
 
       queue_items_to_delete[0...@zarr_config.delete_limit].each { |z| @zarr_api.delete_queue_item(z['id']) }
