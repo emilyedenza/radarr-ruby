@@ -3,6 +3,7 @@
 require 'yaml'
 require_relative 'sonarr_config'
 require_relative 'radarr_config'
+require_relative 'redis_config'
 require_relative 'qbittorrent_config'
 
 module RadarrRuby
@@ -19,6 +20,10 @@ module RadarrRuby
 
     def self.qbittorrent
       QbittorrentConfig.new(config_hash['qbittorrent'])
+    end
+
+    def self.redis
+      RedisConfig.new(config_hash['redis'])
     end
 
     def self.config_hash(config_path = 'config.yml')
