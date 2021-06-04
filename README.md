@@ -41,7 +41,8 @@ Pushes slow or stalled downloads out the door after being queued by Sonarr or Ra
 1. Setting the interval to too short a time could trigger false positives, and get rid of reasonable downloads.
 2. The same goes for setting the download speed threshold too low.
 3. Being impatient about downloads, as this utility promotes one to be, isn't great for the peer-to-peer community.
-4. You could be locked out of qBittorrent's API if you keep entering the wrong credentials. Oh yes, that's what I did.
+4. Too long a blacklist in Sonarr or Radarr can make searching for downloads *very* slow.
+5. You could be locked out of qBittorrent's API if you keep entering the wrong credentials. Oh yes, that's what I did.
 
 ## Why Did You Code X in File Y?
 
