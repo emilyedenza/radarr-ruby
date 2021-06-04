@@ -3,7 +3,7 @@
 
 require 'optionparser'
 require_relative 'generic_cleaner'
-require_relative 'config/config'
+require_relative 'config/config_factory'
 
 $stdout.sync = true
 
@@ -27,6 +27,5 @@ end.parse!
 abort 'Cannot clean both Radarr (-r) and Sonarr (-s). Please choose only one.' if options[:radarr] && options[:sonarr]
 abort 'Please choose to clean either Radarr (-r) or Sonarr (-s).' unless options[:radarr] || options[:sonarr]
 
-config = options[:radarr] ? RadarrRuby::Config.radarr : RadarrRuby::Config.sonarr
-cleaner = GenericCleaner.new(config)
+cleaner = options[:radarr] ? GenericCleaner.radarr : GenericCleaner.sonarr
 cleaner.run
