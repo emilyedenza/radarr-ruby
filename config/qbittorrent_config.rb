@@ -4,7 +4,7 @@ require_relative 'generic_config'
 
 module RadarrRuby
   ##
-  # Stores QBittorrent-specific configuration.
+  # Stores qBittorrent-specific configuration.
   # The (inconsistent) lowercase "Q" is for development rule-following.
   class QbittorrentConfig < GenericConfig
     attr_reader :host, :username, :password

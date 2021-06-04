@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 ##
-# Interacts with, and manages, the QBittorrent API.
+# Interacts with, and manages, the qBittorrent API.
 class QbittorrentApi
   def initialize(qbittorrent_config)
     auth_cookie = log_in(qbittorrent_config.host, qbittorrent_config.username, qbittorrent_config.password)
@@ -34,11 +34,11 @@ class QbittorrentApi
 
     case login_response.body
     when 'Fails.'
-      raise 'QBittorrent username/password combination incorrect.'
+      raise 'qBittorrent username/password combination incorrect.'
     when 'Ok.'
       login_response.headers['set-cookie']
     else
-      raise "Unknown error when logging into QBittorrent: #{login_response.body}"
+      raise "Unknown error when logging into qBittorrent: #{login_response.body}"
     end
   end
 end
