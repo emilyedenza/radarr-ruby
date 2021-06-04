@@ -9,10 +9,6 @@ module RadarrRuby
   ##
   # Cleans stalled or slow downloads from Sonarr or Radarr.
   class Cleaner
-    attr_reader :commands_enabled, :zarr_db_path, :stuck_threshold, :commands, :delete_limit, :singular_name,
-                :speed_threshold_kibs, :category, :disk_path, :free_threshold_mib, :zarr_api, :clean_analyser,
-                :redis_stuck_label
-
     def initialize(zarr_config, qbittorrent_config, redis_client, redis_config)
       @zarr_api = ZarrApi.new(zarr_config)
       @zarr_config = zarr_config
@@ -30,7 +26,7 @@ module RadarrRuby
 
       free_disk_space_item = @zarr_api.free_disk_space.find { |d| d['path'] == @zarr_config.disk_path }
       free_bytes = free_disk_space_item['freeSpace']
-      free_bytes_threshold = @zarr_config.free_threshold_mib * 1024 ** 2
+      free_bytes_threshold = @zarr_config.free_threshold_mib * 1024**2
       if free_bytes < free_bytes_threshold
         puts "#{free_bytes} bytes < minimum (#{free_bytes_threshold}). Skipping run."
         return
