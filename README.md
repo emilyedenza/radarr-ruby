@@ -19,6 +19,14 @@ Pushes slow or stalled downloads out the door after being queued by Sonarr or Ra
 - Helps free up disk space.
 - Can reduce local network congestion and CPU/memory load.
 
+## Getting Started
+
+1. Ensure you have Ruby installed (tested on 3.0.1).
+2. Clone this repository.
+3. Install dependencies with `bundle` or `bundle install`.
+4. Run `ruby init.rb -s` for Sonarr, or `ruby init.rb -r` for Radarr.
+5. Profit.
+
 ## How Does It Work?
 
 1. Asks qBittorrent for its download list.
@@ -32,10 +40,11 @@ Pushes slow or stalled downloads out the door after being queued by Sonarr or Ra
 1. Setting the interval to too short a time could trigger false positives, and get rid of reasonable downloads.
 2. The same goes for setting the download speed threshold too low.
 3. Being impatient about downloads, as this utility promotes one to be, isn't great for the peer-to-peer community.
+4. You could be locked out of qBittorrent's API if you keep entering the wrong credentials. Oh yes, that's what I did.
 
 ## Why Did You Code X in File Y?
 
-This started out as a tool to solidify my introduction into Ruby, so this is definitely not supposed to be a podium
+This started out as a tool to solidify my introduction into Ruby, so this is certainly not supposed to be a podium
 example of how to code applications. It's publicly available for educational purposes only. Beware of the bugz!
 
 ## That Said...
