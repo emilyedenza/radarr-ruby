@@ -49,10 +49,13 @@ module RadarrRuby
       torrents += @qbittorrent_api.torrents({ filter: 'stalled' })
       torrents_timer_end = Process.clock_gettime(Process::CLOCK_MONOTONIC)
       torrents_duration = (torrents_timer_end - torrents_timer_start).round(2)
-      puts "Fetched #{torrents.length} in #{torrents_duration} sec."
+      puts "Fetched #{torrents.length} torrents in #{torrents_duration} sec."
 
+      zarr_timer_start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
       zarr_queue = @zarr_api.queue
-      puts "Fetched #{zarr_queue.length} queue items."
+      zarr_timer_end = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+      zarr_timer_duration = (zarr_timer_end - zarr_timer_start).round(2)
+      puts "Fetched #{zarr_queue.length} queue items in #{zarr_timer_duration} sec."
     end
   end
 end
