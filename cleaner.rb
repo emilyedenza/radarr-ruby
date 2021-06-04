@@ -67,7 +67,10 @@ module RadarrRuby
       puts "Delete: #{qbittorrent_status_boxes[:delete].length}"
       puts
 
-      abort 'Nothing to delete. All done.' unless qbittorrent_status_boxes[:delete].any?
+      unless qbittorrent_status_boxes[:delete].any?
+        puts 'Nothing to delete. All done.'
+        return
+      end
 
       zarr_timer_start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
       zarr_queue = @zarr_api.queue
