@@ -13,11 +13,5 @@ module RadarrRuby
       @app_name = 'Radarr'
       @resource_name = 'movie'
     end
-
-    def inspect
-      "#{super}
-Root folder path:\t\t\t\t#{root_folder_path}
-Quality profile ID:\t\t\t#{quality_profile_id}"
-    end
   end
 end
