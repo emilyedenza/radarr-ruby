@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'singleton'
+require_relative 'config/config_factory'
 
 ##
 # Ensures that one shared Redis client is used throughout the application.
@@ -10,7 +11,6 @@ class RedisClient
   attr_reader :client
 
   def initialize
-    @client = Redis.new
-    puts @client.ping('Connected to Redis.')
+    @client = Redis.new({ url: ConfigFactory.redis.host })
   end
 end
