@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 #
 require 'set'
-require_relative 'api/sonarr_api'
-require_relative 'api/radarr_api'
+require_relative 'api/zarr_api'
 
 module RadarrRuby
   ##
@@ -14,14 +13,14 @@ module RadarrRuby
 
     ##
     # Generates a cleaner instance for Radarr.
-    def self.radarr
-      Cleaner.new(RadarrApi.new)
+    def self.radarr(radarr_config)
+      Cleaner.new(ZarrApi.new(radarr_config))
     end
 
     ##
     # Generates a cleaner instance for Sonarr.
     def self.sonarr(sonarr_config)
-      Cleaner.new(SonarrApi.new(sonarr_config))
+      Cleaner.new(ZarrApi.new(sonarr_config))
     end
 
     def initialize(api)
