@@ -14,10 +14,5 @@ module RadarrRuby
       @app_name = 'Sonarr'
       @resource_name = 'show'
     end
-
-    def inspect
-      "#{super}
-DB path:\t\t\t\t\t#{db_path}"
-    end
   end
 end

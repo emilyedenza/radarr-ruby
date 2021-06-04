@@ -1,18 +1,19 @@
+# frozen_string_literal: true
+
+require_relative 'generic_config'
+
 module RadarrRuby
   ##
   # Stores QBittorrent-specific configuration.
   # The (inconsistent) lowercase "Q" is for development rule-following.
-  class QbittorrentConfig
+  class QbittorrentConfig < GenericConfig
     attr_reader :host, :username, :password
 
     def initialize(config_hash)
+      super(config_hash, %w[username password])
       @host = config_hash['host']
       @username = config_hash['username']
       @password = config_hash['password']
-    end
-
-    def inspect
-      "Host:\t\t\t\t\t\t#{host}"
     end
   end
 end

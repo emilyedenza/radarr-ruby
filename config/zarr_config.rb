@@ -1,38 +1,30 @@
 ##
 # Mixin for common configuration in both Sonarr and Radarr.
 
+require_relative 'generic_config'
+
 module RadarrRuby
-  class ZarrConfig
+  ##
+  # Config shared across Radarr and Sonarr
+  class ZarrConfig < GenericConfig
     attr_reader :base, :sleep_sec, :api_key, :category, :speed_threshold_kibs, :free_threshold_mib, :disk_path,
                 :delete_limit, :commands, :completion_threshold, :commands_enabled, :app_name, :resource_name
 
-    def initialize(config)
+    def initialize(config_hash)
+      super(config_hash, %w[api_key])
       @app_name = '(unknown)'
       @resource_name = '(unknown)'
-      @base = config['base']
-      @sleep_sec = config['sleep_sec']
-      @api_key = config['api_key']
-      @category = config['category']
-      @speed_threshold_kibs = config['speed_threshold_kibs']
-      @free_threshold_mib = config['free_threshold_mib']
-      @disk_path = config['disk_path']
-      @delete_limit = config['delete_limit']
-      @commands = config['commands']
-      @completion_threshold = config['completion_threshold']
-      @commands_enabled = config['commands_enabled']
-    end
-
-    def inspect
-      "Base:\t\t\t\t\t\t#{base}
-Sleep:\t\t\t\t\t\t#{sleep_sec}
-Category:\t\t\t\t\t#{category}
-Speed threshold (KiB/s):\t#{speed_threshold_kibs}
-Free threshold (MiB):\t\t#{free_threshold_mib}
-Disk path:\t\t\t\t#{disk_path}
-Delete limit:\t\t\t\t#{delete_limit}
-Commands:\t\t\t\t\t#{commands}
-Completion threshold:\t\t#{completion_threshold}
-Commands enabled:\t\t\t#{commands_enabled}"
+      @base = config_hash['base']
+      @sleep_sec = config_hash['sleep_sec']
+      @api_key = config_hash['api_key']
+      @category = config_hash['category']
+      @speed_threshold_kibs = config_hash['speed_threshold_kibs']
+      @free_threshold_mib = config_hash['free_threshold_mib']
+      @disk_path = config_hash['disk_path']
+      @delete_limit = config_hash['delete_limit']
+      @commands = config_hash['commands']
+      @completion_threshold = config_hash['completion_threshold']
+      @commands_enabled = config_hash['commands_enabled']
     end
   end
 end
