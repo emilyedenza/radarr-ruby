@@ -3,7 +3,7 @@
 require 'active_support/inflector'
 require_relative 'api/zarr_api'
 require_relative 'api/qbittorrent_api'
-require_relative 'analyser/clean_analyser'
+require_relative 'analyser/decision_engine'
 
 module RadarrRuby
   ##
@@ -14,7 +14,7 @@ module RadarrRuby
       @zarr_config = zarr_config
       @qbittorrent_api = QbittorrentApi.new(qbittorrent_config)
       @redis_client = redis_client
-      @clean_analyser = CleanAnalyser.new(zarr_config.completion_threshold, zarr_config.speed_threshold_kibs)
+      @clean_analyser = DecisionEngine.new(zarr_config.completion_threshold, zarr_config.speed_threshold_kibs)
       @redis_config = redis_config
     end
 
@@ -57,11 +57,7 @@ module RadarrRuby
         @redis_client.set(t['hash'], t['state'], ex: @redis_config.expiry_secs)
       end
 
-      puts "New: #{qbittorrent_status_boxes[:new].length}"
-      puts "Changed: #{qbittorrent_status_boxes[:changed].length}"
-      puts "Valid: #{qbittorrent_status_boxes[:valid].length}"
-      puts "Delete: #{qbittorrent_status_boxes[:delete].length}"
-      puts
+      print_status_boxes(qbittorrent_status_boxes)
 
       unless qbittorrent_status_boxes[:delete].any?
         puts 'Nothing to delete. All done.'
@@ -107,6 +103,16 @@ module RadarrRuby
       end
 
       queue_items_to_delete[0...@zarr_config.delete_limit].each { |z| @zarr_api.delete_queue_item(z['id']) }
+    end
+
+    private
+
+    def print_status_boxes(qbittorrent_status_boxes)
+      puts "New: #{qbittorrent_status_boxes[:new].length}"
+      puts "Changed: #{qbittorrent_status_boxes[:changed].length}"
+      puts "Valid: #{qbittorrent_status_boxes[:valid].length}"
+      puts "Delete: #{qbittorrent_status_boxes[:delete].length}"
+      puts
     end
   end
 end

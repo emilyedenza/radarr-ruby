@@ -6,7 +6,7 @@ require_relative '../api/qbittorrent_state'
 ##
 # Given a configured completion threshold and a speed threshold, determines whether a torrent has changed, should be
 # deleted, is newly visible, or is valid and should be left alone.
-class CleanAnalyser
+class DecisionEngine
   def initialize(completion_threshold, speed_threshold_kibs)
     @completion_threshold = completion_threshold
     @speed_threshold_kibs = speed_threshold_kibs
@@ -24,11 +24,15 @@ class CleanAnalyser
 
     return QueueStatus::DELETE if torrent['state'] == QbittorrentState::META_DL
 
-    if torrent['state'] == QbittorrentState::DOWNLOADING && ((torrent['dlspeed'] < @speed_threshold_kibs * 1024 \
- && torrent['progress'] < @completion_threshold) || torrent['availability'] < 1)
-      return QueueStatus::DELETE
-    end
+    return QueueStatus::DELETE if valid_for_deletion(torrent)
 
     QueueStatus::VALID
+  end
+
+  private
+
+  def valid_for_deletion(torrent)
+    torrent['state'] == QbittorrentState::DOWNLOADING && ((torrent['dlspeed'] < @speed_threshold_kibs * 1024 \
+   && torrent['progress'] < @completion_threshold) || torrent['availability'] < 1)
   end
 end
