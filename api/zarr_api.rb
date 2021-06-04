@@ -21,7 +21,7 @@ class ZarrApi
   # Delete a single queue item by ID.
   # If +should_blacklist+ is true, this will prevent the API from fetching this release in the future.
   def delete_queue_item(item_id, should_blacklist: true)
-    @conn.delete("queue/#{item_id}", { should_blacklist: should_blacklist })
+    @conn.delete("queue/#{item_id}", { blacklist: should_blacklist })
   end
 
   ##
