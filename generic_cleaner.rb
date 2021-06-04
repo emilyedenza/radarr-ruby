@@ -6,6 +6,7 @@ require 'yaml'
 require_relative 'api/radarr_api'
 require_relative 'api/sonarr_api'
 require_relative 'config/config_factory'
+require_relative 'redis_client'
 
 ##
 # Runs a clean loop triggered by a Sonarr or Radarr control flow/input.
@@ -28,13 +29,21 @@ class GenericCleaner
     print_header
 
     qbittorrent_config = ConfigFactory.qbittorrent
-    print_config(qbittorrent_config, ConfigFactory.redis)
+    print_config(@zarr_api.config, qbittorrent_config, ConfigFactory.redis)
+    print_redis_check
 
     cleaner = Cleaner.new(@zarr_api, qbittorrent_config)
     start_loop(cleaner)
   end
 
   private
+
+  def print_redis_check
+    puts RedisClient.instance.client.ping('Redis connected.')
+    puts
+    puts DIVIDER
+    puts
+  end
 
   def start_loop(cleaner)
     loop do
