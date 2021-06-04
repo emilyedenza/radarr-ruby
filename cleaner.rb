@@ -71,11 +71,11 @@ module RadarrRuby
       zarr_queue = @zarr_api.queue
       zarr_timer_end = Process.clock_gettime(Process::CLOCK_MONOTONIC)
       zarr_timer_duration = (zarr_timer_end - zarr_timer_start).round(2)
-      puts "Fetched #{zarr_queue.length} queue #{'item'.pluralize(zarr_queue.length)} in #{zarr_timer_duration} sec."
+      puts "Fetched #{zarr_queue.length} queue #{@zarr_config.resource_name.pluralize(zarr_queue.length)} in #{zarr_timer_duration} sec."
 
       zarr_no_download_items = zarr_queue.find_all { |z| !z['downloadId'] }
       if zarr_no_download_items.any?
-        puts "WARNING: Found #{zarr_no_download_items.length} #{'item'.pluralize(zarr_no_download_items.length)} without download IDs:
+        puts "WARNING: Found #{zarr_no_download_items.length} #{@zarr_config.resource_name.pluralize(zarr_no_download_items.length)} without download IDs:
 #{zarr_no_download_items.map { |z| "  > #{z['title']}" }.join('n')}"
         puts
       end
@@ -87,7 +87,7 @@ module RadarrRuby
       end
 
       delete_match_count = queue_items_to_delete.length
-      puts "#{delete_match_count} matched queue #{'item'.pluralize(delete_match_count)} to delete."
+      puts "#{delete_match_count} matched queue #{@zarr_config.resource_name.pluralize(delete_match_count)} to delete."
 
       if delete_match_count < qbittorrent_status_boxes[:delete].length
         all_commands = zarr_api.commands

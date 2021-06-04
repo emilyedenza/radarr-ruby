@@ -11,6 +11,8 @@ module RadarrRuby
     def initialize(config)
       super
       @db_path = config['db_path']
+      @app_name = 'Sonarr'
+      @resource_name = 'show'
     end
 
     def inspect

@@ -33,5 +33,6 @@ loop do
   cleaner.clean
   puts "Sleeping for #{sonarr_config.sleep_sec} sec."
   puts divider
+  puts
   sleep(sonarr_config.sleep_sec)
 end

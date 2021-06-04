@@ -4,9 +4,11 @@
 module RadarrRuby
   class ZarrConfig
     attr_reader :base, :sleep_sec, :api_key, :category, :speed_threshold_kibs, :free_threshold_mib, :disk_path,
-                :delete_limit, :commands, :completion_threshold, :commands_enabled
+                :delete_limit, :commands, :completion_threshold, :commands_enabled, :app_name, :resource_name
 
     def initialize(config)
+      @app_name = '(unknown)'
+      @resource_name = '(unknown)'
       @base = config['base']
       @sleep_sec = config['sleep_sec']
       @api_key = config['api_key']
