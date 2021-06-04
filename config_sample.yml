@@ -1,0 +1,39 @@
+radarr:
+  api_key: b307a7ad728fe31f1689014cc9442b4e
+  base: http://127.0.0.1/radarr/api/v3
+  sleep_sec: 60
+  request_timeout_sec: 60
+  category: radarr
+  speed_threshold_kibs: 70
+  free_threshold_mib: 1000
+  delete_limit: 20
+  commands:
+    - MoviesSearch
+    - RssSync
+    - CutOffUnmetMoviesSearch
+    - missingMoviesSearch
+    - NetImportSync
+  completion_threshold: 98
+  disk_path: /downloads
+redis:
+  expiry_secs: 1800
+sonarr:
+  api_key: ae75bca911ac71830529173bce2b1d57
+  base: http://127.0.0.1/sonarr/api
+  sleep_sec: 60
+  category: tv-sonarr
+  speed_threshold_kibs: 70
+  free_threshold_mib: 1000
+  delete_limit: 20
+  commands:
+    - EpisodeSearch
+    - SeasonSearch
+    - SeriesSearch
+    - RssSync
+    - missingEpisodeSearch
+  completion_threshold: 98
+  disk_path: /downloads
+qbittorrent:
+  host: http://127.0.0.1/qbittorrent/api/v2
+  username: myuser
+  password: mySuperSecurePassw0rd

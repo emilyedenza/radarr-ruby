@@ -21,11 +21,12 @@ Pushes slow or stalled downloads out the door after being queued by Sonarr or Ra
 
 ## Getting Started
 
-1. Ensure you have Ruby installed (tested on 3.0.1).
+1. Ensure you have `redis` and `ruby` (tested on 3.0.1) installed.
 2. Clone this repository.
 3. Install dependencies with `bundle` or `bundle install`.
-4. Run `ruby init.rb -s` for Sonarr, or `ruby init.rb -r` for Radarr.
-5. Profit.
+4. `cp config_sample.yml config.yml` and alter as necessary.
+5. Run `ruby init.rb -s` for Sonarr, or `ruby init.rb -r` for Radarr.
+6. Profit.
 
 ## How Does It Work?
 
