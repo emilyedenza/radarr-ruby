@@ -54,7 +54,7 @@ class Cleaner
     if zarr_no_download_items.any?
       print "WARNING: Found #{zarr_no_download_items.length} "
       puts "#{@zarr_api.config.resource_name.pluralize(zarr_no_download_items.length)} without download IDs:
-#{zarr_no_download_items.map { |z| "  > #{z['title']}" }.join('n')}"
+#{zarr_no_download_items.map { |z| "  > #{z['title']}" }.join("\n")}"
       puts
     end
 
