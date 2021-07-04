@@ -27,8 +27,14 @@ class Cleaner
     end
 
     torrents_timer_start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-    torrents = @qbittorrent_api.torrents({ filter: 'active', category: @zarr_api.config.category })
-    torrents += @qbittorrent_api.torrents({ filter: 'stalled', category: @zarr_api.config.category })
+    
+    begin
+      torrents = @qbittorrent_api.torrents({ filter: 'active', category: @zarr_api.config.category })
+      torrents += @qbittorrent_api.torrents({ filter: 'stalled', category: @zarr_api.config.category })
+    rescue Faraday::Error => e
+      return "ERROR: #{e.response[:status]} while fetching torrents."
+    end
+    
     torrents_timer_end = Process.clock_gettime(Process::CLOCK_MONOTONIC)
     torrents_duration = (torrents_timer_end - torrents_timer_start).round(2)
     puts "Fetched #{torrents.length} #{'torrent'.pluralize(torrents.length)} in #{torrents_duration} sec."
@@ -44,7 +50,13 @@ class Cleaner
     end
 
     zarr_timer_start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-    zarr_queue = @zarr_api.queue
+    
+    begin
+      zarr_queue = @zarr_api.queue
+    rescue Faraday::Error
+      return "#{e.response[:status]} while fetching #{@zarr_api.config.resource_name}s."
+    end
+    
     zarr_timer_end = Process.clock_gettime(Process::CLOCK_MONOTONIC)
     zarr_timer_duration = (zarr_timer_end - zarr_timer_start).round(2)
     print "Fetched #{zarr_queue.length} #{@zarr_api.config.resource_name.pluralize(zarr_queue.length)} "
