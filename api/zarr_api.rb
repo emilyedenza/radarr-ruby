@@ -11,9 +11,14 @@ class ZarrApi
 
   def initialize(zarr_config)
     @config = zarr_config
+    retry_options = {
+      max: 20,
+      interval: 0.1,
+      backoff_factor: 2,
+    }
     @conn = Faraday.new(url: zarr_config.base, params: { apikey: zarr_config.api_key }) do |f|
       f.request(:json)
-      f.request(:retry)
+      f.request(:retry, retry_options)
       f.response(:follow_redirects)
       f.response(:json)
       f.response(:raise_error)
