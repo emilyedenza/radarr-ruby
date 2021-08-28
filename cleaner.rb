@@ -21,7 +21,7 @@ class Cleaner
     begin
       free_disk_space_item = @zarr_api.free_disk_space.find { |d| d['path'] == @zarr_api.config.disk_path }
     rescue Faraday::Error
-      return "ERROR: #{e.response[:status]} while checking free space."
+      return "ERROR: #{e&.response&.dig(:status)} while checking free space."
     end
     free_bytes = free_disk_space_item['freeSpace']
     free_bytes_threshold = @zarr_api.config.free_threshold_mib * 1024**2
@@ -36,7 +36,7 @@ class Cleaner
       torrents = @qbittorrent_api.torrents({ filter: 'active', category: @zarr_api.config.category })
       torrents += @qbittorrent_api.torrents({ filter: 'stalled', category: @zarr_api.config.category })
     rescue Faraday::Error => e
-      return "ERROR: #{e.response[:status]} while fetching torrents."
+      return "ERROR: #{e&.response&.dig(:status)} while fetching torrents."
     end
 
     torrents_timer_end = Process.clock_gettime(Process::CLOCK_MONOTONIC)
@@ -58,7 +58,7 @@ class Cleaner
     begin
       zarr_queue = @zarr_api.queue
     rescue Faraday::Error
-      return "#{e.response[:status]} while fetching #{@zarr_api.config.resource_name}s."
+      return "#{e&.response&.dig(:status)} while fetching #{@zarr_api.config.resource_name}s."
     end
 
     zarr_timer_end = Process.clock_gettime(Process::CLOCK_MONOTONIC)
