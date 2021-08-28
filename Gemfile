@@ -10,3 +10,8 @@ gem "faraday", "~> 1.4"
 gem "faraday_middleware", "~> 1.0"
 
 gem "activesupport", "~> 6.1"
+
+group :development do
+  gem 'rubocop', '~> 1.12'
+  gem 'rubocop-performance', '~> 1.11'
+end
