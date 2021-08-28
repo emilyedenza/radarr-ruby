@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'logger'
 require 'redis'
 require_relative 'cleaner'
 require 'yaml'
@@ -22,6 +23,7 @@ class GenericCleaner
   end
 
   def initialize(zarr_api)
+    @logger = Logger.new($stdout)
     @zarr_api = zarr_api
   end
 
@@ -39,35 +41,29 @@ class GenericCleaner
   private
 
   def print_redis_check
-    puts RedisClient.instance.client.ping('Redis connected.')
-    puts
-    puts DIVIDER
-    puts
+    @logger.info RedisClient.instance.client.ping('Redis connected.')
+    @logger.info DIVIDER
   end
 
   def start_loop(cleaner)
     loop do
       cleaner.clean
-      puts "Sleeping for #{@zarr_api.config.sleep_sec} sec."
-      puts DIVIDER
-      puts
+      @logger.info "Sleeping for #{@zarr_api.config.sleep_sec} sec."
+      @logger.info DIVIDER
       sleep(@zarr_api.config.sleep_sec)
     end
   end
 
   def print_header
-    puts DIVIDER
-    puts "| #{@zarr_api.config.app_name.upcase} CLEANER |"
-    puts DIVIDER
-    puts
+    @logger.info DIVIDER
+    @logger.info "| #{@zarr_api.config.app_name.upcase} CLEANER |"
+    @logger.info DIVIDER
   end
 
   def print_config(*configs)
-    puts
-    puts 'Config: '
-    puts DIVIDER
-    configs.each { |c| puts c.inspect }
-    puts DIVIDER
-    puts
+    @logger.info 'Config: '
+    @logger.info DIVIDER
+    configs.each { |c| @logger.info c.inspect }
+    @logger.info DIVIDER
   end
 end
