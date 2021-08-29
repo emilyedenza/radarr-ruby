@@ -122,9 +122,9 @@ class Cleaner
   end
 
   def print_status_boxes(qb_status_boxes)
-    @logger.info "New: #{qb_status_boxes[:new].length}"
-    @logger.info "Changed: #{qb_status_boxes[:changed].length}"
-    @logger.info "Valid: #{qb_status_boxes[:valid].length}"
-    @logger.info "Delete: #{qb_status_boxes[:delete].length}"
+    @logger.info "New: #{qb_status_boxes[:new].length},    "\
+    "Changed: #{qb_status_boxes[:changed].length},    "\
+    "Valid: #{qb_status_boxes[:valid].length}    "\
+    "Delete: #{qb_status_boxes[:delete].length}"
   end
 end
